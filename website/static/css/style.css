@@ -1,0 +1,226 @@
+/* --- فونت و ریست اولیه --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #0d0f18; /* رنگ پس‌زمینه دارک گیمینگی */
+    color: #e0e6ed;
+    line-height: 1.8;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- هدر و منو --- */
+header {
+    background: linear-gradient(180deg, #151928 0%, #0d0f18 100%);
+    border-bottom: 2px solid #00f0ff;
+    box-shadow: 0 4px 20px rgba(0, 240, 255, 0.15);
+    text-align: center;
+    padding: 2.5rem 1rem 1.5rem;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    color: #00f0ff;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    color: #94a3b8;
+    font-size: 1.05rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    background: #ff007f;
+    color: #fff;
+    border-color: #ff007f;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+    transform: translateY(-2px);
+}
+
+/* --- محتوای اصلی --- */
+main {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+section {
+    background: #161b2e;
+    border: 1px solid #232b45;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+section h2 {
+    color: #ff007f;
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(255, 0, 127, 0.3);
+}
+
+/* --- بخش کارت‌های بازی (Articles) --- */
+#featured-games {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+article {
+    background: #1c223a;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 1px solid #2a3558;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+article:hover {
+    transform: translateY(-4px);
+    border-color: #00f0ff;
+    box-shadow: 0 8px 25px rgba(0, 240, 255, 0.2);
+}
+
+article header h3 {
+    color: #38bdf8;
+    font-size: 1.35rem;
+    margin-bottom: 0.2rem;
+}
+
+article header small {
+    color: #a855f7;
+    font-weight: bold;
+}
+
+figure {
+    margin: 1.2rem 0;
+    text-align: center;
+    background: #111422;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #232b45;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+figcaption {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+article p {
+    color: #cbd5e1;
+    margin-bottom: 1.2rem;
+}
+
+article a {
+    display: inline-block;
+    padding: 0.6rem 1.4rem;
+    background: linear-gradient(45deg, #00f0ff, #0077ff);
+    color: #000;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+    transition: opacity 0.3s, transform 0.2s;
+}
+
+article a:hover {
+    opacity: 0.9;
+    transform: scale(1.03);
+}
+
+/* --- لیست ابزارها و سایدبار --- */
+#tools ul {
+    list-style-position: inside;
+    margin-top: 0.5rem;
+}
+
+#tools li {
+    margin-bottom: 0.7rem;
+    color: #cbd5e1;
+}
+
+#tools strong {
+    color: #38bdf8;
+}
+
+aside {
+    background: linear-gradient(135deg, rgba(255, 0, 127, 0.1), rgba(0, 240, 255, 0.1));
+    border: 1px dashed #ff007f;
+    border-radius: 10px;
+    padding: 1.2rem 1.8rem;
+}
+
+aside h3 {
+    color: #ff007f;
+    margin-bottom: 0.5rem;
+}
+
+/* --- فوتر --- */
+footer {
+    background: #080a10;
+    border-top: 1px solid #1f273d;
+    text-align: center;
+    padding: 1.8rem 1rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+footer a {
+    color: #94a3b8;
+    text-decoration: none;
+    margin: 0 0.5rem;
+}
+
+footer a:hover {
+    color: #00f0ff;
+}
+
+/* .card {
+  background: linear-gradient(135deg, rgba(255, 0, 127, 0.1), rgba(0, 240, 255, 0.1));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+} */

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="مرجع معرفی و بررسی برترین بازی‌های ساخته شده با زبان برنامه‌نویسی پایتون و پای‌گیم (Pygame).">
+    <title>دنیای بازی‌های پایتونی | شکارچی فضایی</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>    
+    <!-- سربرگ اصلی سایت -->
+    <header>
+        <h1>لانچر بازی‌های رایانه‌ای سپهر</h1>
+        <p>مرجع معرفی، بررسی و توسعه بازی با html</p>
+        
+        <!-- منوی اصلی ناوبری -->
+        <nav aria-label="منوی اصلی">
+
+            
+            <div class="digital-date" id="digitalDate">
+                2026/09/18
+            </div>
+
+            <style>
+            .digital-date {
+                position: absolute;
+                top: 90px;
+                left: 20px;
+
+                width: 100px;
+                height: 45px;
+
+                background: #111;
+                border: 3px solid #333;
+                border-radius: 8px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                color: #00ff66;
+                font-family: "Courier New", monospace;
+                font-size: 13px;
+                font-weight: bold;
+
+                box-shadow: 0 0 10px rgba(0, 255, 100, 0.4);
+            }
+            </style>
+
+            <script>
+            function updateDate() {
+                let now = new Date();
+
+                let year = now.getFullYear();
+                let month = String(now.getMonth() + 1).padStart(2, "0");
+                let day = String(now.getDate()).padStart(2, "0");
+
+                document.getElementById("digitalDate").textContent =
+                    month + "/" + day + "/" + year;
+            }
+
+            updateDate();
+            </script>
+
+
+
+
+
+
+
+
+            
+            
+            <div class="digital-clock" id="digitalClock">
+                00:00:00
+            </div>
+
+            <style>
+            .digital-clock {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+
+                width: 100px;
+                height: 45px;
+
+                background: #111;
+                border: 3px solid #333;
+                border-radius: 8px;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                color: #00ff66;
+                font-family: "Courier New", monospace;
+                font-size: 15px;
+                font-weight: bold;
+
+                box-shadow: 0 0 10px rgba(0, 255, 100, 0.4);
+            }
+
+            </style>
+
+            <script>
+            function updateDigitalClock() {
+                let now = new Date();
+
+                let hours = String(now.getHours()).padStart(2, "0");
+                let minutes = String(now.getMinutes()).padStart(2, "0");
+                let seconds = String(now.getSeconds()).padStart(2, "0");
+
+                document.getElementById("digitalClock").textContent =
+                    hours + ":" + minutes + ":" + seconds;
+            }
+
+            updateDigitalClock();
+            setInterval(updateDigitalClock, 1000);
+            </script>
+
+
+
+            
+            <ul>
+                <li><a href="/">خانه</a></li>
+                <li><a href="/game">مینی گیم ها</a></li>
+                <li><a href="/blog">وبلاگ آموزشی</a></li>
+                <li><a href="/about">درباره ما</a></li>
+                <li><a href="/contact">تماس با ما</a></li>
+                <li><a href="/game_assistant">ربات پشتیبان</a></li>
+            </ul>
+        </nav>
+    </header>   
+
+    <!-- بدنه اصلی و اختصاصی صفحه -->
+    <main>
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- پابرگ سایت -->
+    <footer>
+        <section>
+            <h4>دسترسی سریع</h4>
+            <p><a href="/privacy">حریم خصوصی</a> | <a href="/terms">قوانین و مقررات</a></p>
+        </section>
+        <p><small>تمامی حقوق مادی و معنوی برای «دنیای بازی‌های پایتون» محفوظ است © ۲۰۲۶</small></p>
+    </footer>
+</body>
+</html>

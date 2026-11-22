@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Assistant</title>
+  <style>
+    /* استایل پایه؛ می‌توانی همه این بخش را با CSS خودت جایگزین کنی */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #10131b;
+      color: #f3f5fa;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+    .assistant {
+      width: min(100%, 680px);
+      overflow: hidden;
+      border: 1px solid #2a3242;
+      border-radius: 20px;
+      background: #191f2b;
+      box-shadow: 0 18px 55px #0006;
+    }
+    .assistant-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      border-bottom: 1px solid #2a3242;
+      background: #1e2634;
+    }
+    .assistant-avatar {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #7657e8;
+      font-size: 22px;
+    }
+    .assistant-header h2 { margin: 0 0 5px; font-size: 17px; }
+    .assistant-status { color: #9ba8bd; font-size: 12px; }
+    .status-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-left: 5px;
+      border-radius: 50%;
+      background: #55d69e;
+    }
+    .chat {
+      height: 350px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px;
+    }
+    .message {
+      max-width: 86%;
+      padding: 12px 15px;
+      border-radius: 15px;
+      line-height: 1.9;
+      font-size: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      animation: appear .2s ease-out;
+    }
+    .message.bot {
+      align-self: flex-start;
+      background: #273244;
+      border-bottom-right-radius: 5px;
+    }
+    .message.user {
+      align-self: flex-end;
+      background: #6248cb;
+      border-bottom-left-radius: 5px;
+    }
+    .typing {
+      align-self: flex-start;
+      color: #aeb9cb;
+      font-size: 12px;
+      padding: 2px 8px;
+    }
+    .typing span { animation: blink 1s infinite; }
+    .typing span:nth-child(2) { animation-delay: .15s; }
+    .typing span:nth-child(3) { animation-delay: .3s; }
+    .options-area {
+      padding: 15px 18px 18px;
+      border-top: 1px solid #2a3242;
+      background: #171d28;
+    }
+    .options-title {
+      margin: 0 0 11px;
+      color: #aeb9cb;
+      font-size: 12px;
+    }
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+    .option-btn {
+      min-height: 44px;
+      padding: 10px 12px;
+      border: 1px solid #354158;
+      border-radius: 12px;
+      background: #222c3c;
+      color: #edf0f8;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+    .option-btn:hover {
+      transform: translateY(-2px);
+      border-color: #8b72f0;
+      background: #2d3650;
+    }
+    .option-btn:disabled { opacity: .5; cursor: wait; transform: none; }
+    .custom-question {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .custom-question input {
+      min-width: 0;
+      flex: 1;
+      padding: 12px 14px;
+      border: 1px solid #354158;
+      border-radius: 12px;
+      outline: none;
+      background: #222c3c;
+      color: #fff;
+      font: inherit;
+      font-size: 13px;
+    }
+    .custom-question input:focus { border-color: #8b72f0; }
+    .custom-question button {
+      padding: 0 17px;
+      border: 0;
+      border-radius: 12px;
+      background: #7657e8;
+      color: white;
+      font: inherit;
+      cursor: pointer;
+    }
+    .hint {
+      margin: 10px 2px 0;
+      color: #7f8ba0;
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    @keyframes appear {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes blink { 50% { opacity: .2; } }
+    @media (max-width: 480px) {
+      body { padding: 10px; }
+      .chat { height: 330px; padding: 14px; }
+      .options { grid-template-columns: 1fr; }
+      .message { max-width: 94%; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="assistant">
+    <header class="assistant-header">
+      <div class="assistant-avatar">🎮</div>
+      <div>
+        <h2>دستیار گیم</h2>
+        <div class="assistant-status"><span class="status-dot"></span>آماده پاسخ‌گویی</div>
+      </div>
+    </header>
+
+    <main class="chat" id="chat" aria-live="polite">
+      <div class="message bot">
+        سلام! من دستیار گیم هستم.
+        می‌تونی یکی از موضوع‌های زیر رو انتخاب کنی یا سؤالت رو بنویسی.
+      </div>
+    </main>
+
+    <section class="options-area">
+      <p class="options-title">یک موضوع انتخاب کن:</p>
+      <div class="options" id="options">
+        <button class="option-btn" data-question="چه بازی‌هایی پیشنهاد می‌کنی؟">🎯 پیشنهاد بازی</button>
+        <button class="option-btn" data-question="چطور بازی‌ها را نصب کنم؟">⬇️ راهنمای نصب بازی</button>
+        <button class="option-btn" data-question="برای اجرای بازی چه سیستمی لازم است؟">💻 سیستم موردنیاز</button>
+        <button class="option-btn" data-question="اگر بازی اجرا نشد چه کار کنم؟">🛠️ رفع مشکل بازی</button>
+        <button class="option-btn" data-question="چه سبک بازی‌هایی وجود دارد؟">🕹️ سبک‌های بازی</button>
+        <button class="option-btn" data-question="درباره این سایت توضیح بده">🌐 درباره سایت</button>
+      </div>
+
+      <form class="custom-question" id="questionForm">
+        <input id="questionInput" type="text" placeholder="سؤالت رو اینجا بنویس..." autocomplete="off">
+        <button type="submit">ارسال</button>
+      </form>
+      <p class="hint">این نسخه پاسخ‌ها را از بانک اطلاعاتی داخلی و قوانین ساده پیدا می‌کند؛ برای پاسخ‌گویی واقعی با هوش مصنوعی آنلاین، به اتصال یک مدل هوش مصنوعی از طریق سرور نیاز است.</p>
+    </section>
+  </section>
+
+  <script>
+    // بانک اطلاعاتی کوچک؛ متن‌ها و موضوع‌ها را مطابق سایت خودت تغییر بده.
+    const knowledgeBase = [
+      {
+        keywords: ["پیشنهاد بازی", "معرفی بازی", "چه بازی", "بازی خوب", "بازی پیشنهاد"],
+        answer: "برای پیشنهاد دقیق‌تر، سبک موردعلاقه‌ات رو مشخص کن؛ مثلاً اکشن، ماجراجویی، ترسناک، جهان‌باز یا استراتژی. همچنین می‌تونی مشخصات سیستم یا کنسولت رو بگی تا پیشنهاد مناسب‌تری بدم."
+      },
+      {
+        keywords: ["نصب", "دانلود", "چطور نصب", "نصب بازی"],
+        answer: "برای نصب، ابتدا فایل‌های بازی رو از صفحه مربوط به همون بازی دریافت کن. اگر فایل فشرده بود، آن را استخراج کن و راهنمای نصب همان بازی رو بخون. همیشه فایل‌ها رو از منبع مطمئن دریافت کن."
+      },
+      {
+        keywords: ["سیستم مورد نیاز", "سیستم", "رم", "گرافیک", "پردازنده", "اجرا میشه"],
+        answer: "برای بررسی سیستم موردنیاز، اسم بازی و مشخصات پردازنده، کارت گرافیک و مقدار RAM دستگاهت رو بفرست. حداقل سیستم موردنیاز با سیستم پیشنهادی فرق داره."
+      },
+      {
+        keywords: ["اجرا نمیشه", "ارور", "مشکل", "کرش", "باز نمیشه", "رفع مشکل"],
+        answer: "اول دستگاه رو یک‌بار راه‌اندازی مجدد کن و مطمئن شو درایور کارت گرافیک به‌روز است. برای راهنمایی دقیق‌تر، اسم بازی و متن خطا یا توضیح مشکلی که می‌بینی رو بفرست."
+      },
+      {
+        keywords: ["سبک بازی", "سبک ها", "ژانر", "انواع بازی"],
+        answer: "سبک‌های معروف بازی شامل اکشن، ماجراجویی، نقش‌آفرینی (RPG)، جهان‌باز، شبیه‌سازی، ورزشی، استراتژی، معمایی و ترسناک هستند."
+      },
+      {
+        keywords: ["درباره سایت", "این سایت", "سایت شما"],
+        answer: "به سایت ما خوش اومدی! اینجا می‌تونی بازی‌ها رو بشناسی، اطلاعاتشون رو بخونی و از راهنماهای مربوط به دنیای گیم استفاده کنی."
+      },
+      {
+        keywords: ["سلام", "درود", "hi", "hello"],
+        answer: "سلام! خوش اومدی 🎮 چه چیزی درباره بازی‌ها می‌خوای بدونی؟"
+      },
+      {
+        keywords: ["ممنون", "مرسی", "تشکر"],
+        answer: "خواهش می‌کنم! هر وقت درباره بازی‌ها سؤالی داشتی، بپرس."
+      }
+    ];
+
+    const chat = document.getElementById("chat");
+    const options = document.getElementById("options");
+    const form = document.getElementById("questionForm");
+    const input = document.getElementById("questionInput");
+    let isReplying = false;
+
+    function addMessage(text, type) {
+      const element = document.createElement("div");
+      element.className = `message ${type}`;
+      element.textContent = text;
+      chat.appendChild(element);
+      chat.scrollTop = chat.scrollHeight;
+      return element;
+    }
+
+    function findAnswer(question) {
+      const normalized = question.toLowerCase().replace(/[؟?!،,.]/g, " ").trim();
+
+      let bestMatch = null;
+      let bestScore = 0;
+
+      for (const item of knowledgeBase) {
+        let score = 0;
+        for (const keyword of item.keywords) {
+          if (normalized.includes(keyword.toLowerCase())) score += keyword.length;
+        }
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = item;
+        }
+      }
+
+      if (bestMatch) return bestMatch.answer;
+
+      return "سؤالت رو کامل متوجه نشدم. می‌تونی کمی ساده‌تر یا دقیق‌تر بنویسی؟ فعلاً اطلاعات من بیشتر درباره معرفی بازی‌ها، نصب، سیستم موردنیاز و مشکلات اجرای بازی‌هاست.";
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function typeReply(text) {
+      isReplying = true;
+      setControlsDisabled(true);
+
+      const indicator = document.createElement("div");
+      indicator.className = "typing";
+      indicator.innerHTML = "در حال نوشتن <span>●</span><span>●</span><span>●</span>";
+      chat.appendChild(indicator);
+      chat.scrollTop = chat.scrollHeight;
+
+      // مکث کوتاه شبیه شروع فکر کردن
+      await wait(550 + Math.random() * 450);
+      indicator.remove();
+
+      const bubble = document.createElement("div");
+      bubble.className = "message bot";
+      chat.appendChild(bubble);
+
+      // نمایش تدریجی متن؛ متن پاسخ HTML اجرا نمی‌شود.
+      for (let i = 0; i < text.length; i++) {
+        bubble.textContent += text[i];
+        chat.scrollTop = chat.scrollHeight;
+        await wait(14);
+      }
+
+      isReplying = false;
+      setControlsDisabled(false);
+      input.focus();
+    }
+
+    function setControlsDisabled(disabled) {
+      options.querySelectorAll("button").forEach(button => button.disabled = disabled);
+      input.disabled = disabled;
+      form.querySelector("button").disabled = disabled;
+    }
+
+    async function askBot(question) {
+      const cleanQuestion = question.trim();
+      if (!cleanQuestion || isReplying) return;
+
+      addMessage(cleanQuestion, "user");
+      input.value = "";
+      const answer = findAnswer(cleanQuestion);
+      await typeReply(answer);
+    }
+
+    options.addEventListener("click", event => {
+      const button = event.target.closest("button[data-question]");
+      if (button) askBot(button.dataset.question);
+    });
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      askBot(input.value);
+    });
+  </script>
+</body>
+</html>

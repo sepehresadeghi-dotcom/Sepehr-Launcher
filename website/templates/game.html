@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+    {% block content %}
+    <style>
+        .games {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .game {
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        #game {
+            width: 500px;
+            height: 200px;
+            border: 2px solid black;
+            margin: auto;
+            position: relative;
+            overflow: hidden;
+            background: #eee;
+        }
+
+        #dino {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            font-size: 40px;
+        }
+
+        #cactus {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: 35px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
+
+    <div class="games">
+
+        <h1>مینی گیم های من</h1>
+
+        <!-- بازی دایناسور -->
+        <div class="game">
+
+            <h2>بازی پرش دایناسور</h2>
+
+            <div id="game">
+                <div id="dino">D</div>
+                <div id="cactus">|</div>
+            </div>
+
+            <p>برای پرش دایناسور کلید D را بزن.</p>
+
+            <p>امتیاز: <span id="score">0</span></p>
+
+        </div>
+
+
+        <!-- بازی حدس عدد -->
+        <div class="game">
+
+            <h2>بازی حدس عدد</h2>
+
+            <p>یک عدد بین 1 تا 10 حدس بزن.</p>
+
+            <input id="numberInput" type="number">
+
+            <button onclick="guessNumber()">حدس بزن</button>
+
+            <p id="result"></p>
+
+        </div>
+
+
+        <!-- بازی کلیک سریع -->
+        <div class="game">
+
+            <h2>بازی کلیک سریع</h2>
+
+            <p>روی دکمه کلیک کن!</p>
+
+            <button onclick="clickGame()">کلیک</button>
+
+            <p>امتیاز: <span id="clickScore">0</span></p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // -------------------------
+        // بازی دایناسور
+        // -------------------------
+
+        let dino = document.getElementById("dino");
+        let cactus = document.getElementById("cactus");
+        let score = 0;
+        let jumping = false;
+
+        document.addEventListener("keydown", function(event) {
+
+            if (event.code === "D" && !jumping) {
+
+                jumping = true;
+
+                let jumpHeight = 0;
+
+                let jump = setInterval(function() {
+
+                    jumpHeight += 5;
+
+                    dino.style.bottom = jumpHeight + "px";
+
+                    if (jumpHeight >= 100) {
+
+                        clearInterval(jump);
+
+                        let fall = setInterval(function() {
+
+                            jumpHeight -= 5;
+
+                            dino.style.bottom = jumpHeight + "px";
+
+                            if (jumpHeight <= 0) {
+
+                                clearInterval(fall);
+                                jumping = false;
+
+                            }
+
+                        }, 20);
+
+                    }
+
+                }, 20);
+            }
+
+        });
+
+
+        // حرکت کاکتوس
+
+        setInterval(function() {
+
+            let cactusPosition = parseInt(
+                window.getComputedStyle(cactus).right
+            );
+
+            cactusPosition += 5;
+
+            cactus.style.right = cactusPosition + "px";
+
+            if (cactusPosition > 500) {
+                cactus.style.right = "0px";
+
+                score++;
+
+                document.getElementById("score").innerText = score;
+            }
+
+        }, 50);
+
+
+        // -------------------------
+        // بازی حدس عدد
+        // -------------------------
+
+        let randomNumber = Math.floor(Math.random() * 10) + 1;
+
+        function guessNumber() {
+
+            let number = Number(
+                document.getElementById("numberInput").value
+            );
+
+            let result = document.getElementById("result");
+
+            if (number === randomNumber) {
+
+                result.innerText = "آفرین! درست حدس زدی.";
+
+            } else {
+
+                result.innerText = "اشتباه بود، دوباره امتحان کن.";
+
+            }
+
+        }
+
+
+        // -------------------------
+        // بازی کلیک سریع
+        // -------------------------
+
+        let clickScore = 0;
+
+        function clickGame() {
+
+            clickScore++;
+
+            document.getElementById("clickScore").innerText = clickScore;
+
+        }
+
+    </script>
+
+{% endblock %}
+
